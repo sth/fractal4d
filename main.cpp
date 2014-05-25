@@ -1,80 +1,85 @@
 
 #include <complex>
 #include "gd.hpp"
+#include "algebra.hpp"
 
-class vec4d {
-public:
-	double coords[4];
+// For image drawing purposes this defines an area of coordinates that
+// should be drawn.
+// It is specified by x. and y-coordinates of a point and the width of the area
+// in x direction. The width in y direction is chooses later according to the
+// image dimensions.
+struct area_spec {
+	double xcenter;
+	double ycenter;
+	double xside;
 
-	vec4d(double a, double b, double c, double d)
-			: coords{a, b, c, d} {
-	}
-
-	vec4d operator+(const vec4d &other) const {
-		return vec4d{
-				coords[0]+other.coords[0],
-				coords[1]+other.coords[1],
-				coords[2]+other.coords[2],
-				coords[3]+other.coords[3]};
-	}
-
-	vec4d operator*(double fact) const {
-		return vec4d{
-				coords[0]*fact,
-				coords[1]*fact,
-				coords[2]*fact,
-				coords[3]*fact};
-	}
-
-	vec4d operator/(double fact) const {
-		return vec4d{
-				coords[0]/fact,
-				coords[1]/fact,
-				coords[2]/fact,
-				coords[3]/fact};
-	}
+	static area_spec from_center(double xcenter, double ycenter, double xside);
+	static area_spec from_corners(double xtopleft, double ytopleft, double xbottomright, double ybottomright);
 };
 
-class coord_plane {
-	vec4d origin;
-	vec4d xunit;
-	vec4d yunit;
+area_spec area_spec::from_center(double xcenter, double ycenter, double xside) {
+	return area_spec{xcenter, ycenter, xside};
+}
+
+area_spec area_spec::from_corners(double xtopleft, double ytopleft, double xbottomright, double ybottomright) {
+	return area_spec{
+			(xtopleft+xbottomright)/2,
+			(ytopleft-ybottomright)/2,
+			(xbottomright-xtopleft)
+		};
+}
+
+// An mapping between an area of a plane and pixels of an image
+class discrete_view {
+	plane4d plane;
+
+	double pixelsize;
+	double xorigin;
+	double yorigin;
 
 public:
-	coord_plane(const vec4d &origin_arg, const vec4d &xunit_arg, const vec4d &yunit_arg)
-			: origin(origin_arg), xunit(xunit_arg), yunit(yunit_arg) {
+	discrete_view(const plane4d &plane_arg, const area_spec &area, int xpixels, int ypixels)
+			: plane(plane_arg),
+			  pixelsize(area.xside/xpixels),
+			  xorigin(area.xcenter - (xpixels/2) * pixelsize),
+			  yorigin(area.ycenter - (ypixels/2) * pixelsize) {
 	}
 
+	// Get the point corresponding to a pixel
 	vec4d at(int x, int y) const {
-		return origin + xunit * x + yunit * y;
+		return plane.at(xorigin + x * pixelsize, yorigin + y * pixelsize);
 	}
 };
 
 
+// A fractal image generator for a certain plane.
 class julia_gen {
+	plane4d plane;
 	int maxiter;
 
-	coord_plane baseplane;
-
 public:
-	julia_gen(const coord_plane &baseplane_arg, int maxiter_arg)
-			: baseplane(baseplane_arg), maxiter(maxiter_arg) {
+	julia_gen(const plane4d &plane_arg, int maxiter_arg)
+			: plane(plane_arg), maxiter(maxiter_arg) {
 	}
 
 private:
+	// One iteration step for the fractal generation.
 	std::complex<double> iter_step(std::complex<double> z, std::complex<double> c) const {
 		return z*z + c;
 	}
 
+	// Get a color from the number of iterations
 	int colorize(int it) const {
 		if (it < 0)
 			return gd::trueColor(0, 0, 0);
 		else
-			return gd::trueColor(it*4, it*4, 0);
+			return gd::trueColor(it*2, it*2, 0);
 	}
 
-	// Generic utilities
+	// Generic function to determine the number of iterations till divergence
+	// Returns -1 if not found to be diverging.
 	int find_iterations(const vec4d &spec) const {
+		// From out 4d starting vector 
 		const std::complex<double> c(spec.coords[0], spec.coords[1]);
 		std::complex<double> z(spec.coords[2], spec.coords[3]); 
 
@@ -83,18 +88,20 @@ private:
 			if (abs(z) > 2)
 				return it;
 			z = iter_step(z, c);
-			//z = z*z + c;
 		}
 		return -1;
 	}
 
 public:
-	void fill(gd::image &output) const {
+	// Generate an image for a certain area
+	void fill(gd::image &output, const area_spec &area) const {
 		const int xdim = output.sx();
 		const int ydim = output.sy();
+		const discrete_view view(plane, area, xdim, ydim);
+
 		for (int x = 0; x < xdim; ++x) {
 			for (int y = 0; y < ydim; ++y) {
-				int it = find_iterations(baseplane.at(x, y));
+				int it = find_iterations(view.at(x, y));
 				output.setPixel(x, y, colorize(it));
 			}
 		}
@@ -103,13 +110,13 @@ public:
 
 
 int main() {
-	int xdim = 600;
+	int xdim = 800;
 	int ydim = 600;
 
 	// mandelbrot
-	//vec4d base(-1, -1, 0, 0);
-	//vec4d xside(2, 0, 0, 0);
-	//vec4d yside(0, 2, 0, 0);
+	vec4d base(-1, -1, 0, 0);
+	vec4d xside(2, 0, 0, 0);
+	vec4d yside(0, 2, 0, 0);
 
 	// auch mandelbrot?
 	//vec4d base(-1, -1, -1, -1);
@@ -121,15 +128,17 @@ int main() {
 	//vec4d xside(2, 0, -2, 0);
 	//vec4d yside(0, 2, 0, -2);
 
-	vec4d base(-1, -1, 0.9, 0.9);
-	vec4d xside(2, 0, -1.8, 0);
-	vec4d yside(0, 2, 0, -1.8);
+	//vec4d base(-1, -1, 0.9, 0.9);
+	//vec4d xside(2, 0, -1.8, 0);
+	//vec4d yside(0, 2, 0, -1.8);
 
-	coord_plane baseplane(base, xside/xdim, yside/ydim);
-	julia_gen gen(baseplane, 250);
+	plane4d plane(base, xside, yside);
+	julia_gen gen(plane, 250);
 
+	area_spec area = area_spec::from_center(0, 0, 4);
 	gd::image img(xdim, ydim);
-	gen.fill(img);
+
+	gen.fill(img, area);
 
 	img.writePng("j.png");
 }

@@ -1,0 +1,8 @@
+
+syntax: glob
+*.swp
+.scons*
+*.o
+*.png
+generator
+
