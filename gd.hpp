@@ -25,6 +25,9 @@ public:
 	int sy() const;
 };
 
+
+/* Some function definitions that might be inlined/... */
+
 inline void image::writePng(const std::string &filename, int level) {
 	writePng(filename.c_str(), level);
 }

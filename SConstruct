@@ -9,8 +9,5 @@ env.Append(
 		LIBS = ['gd'],
 	)
 
-#o_gd = env.Object('gd.cpp')
-#o_main = env.Object('main.cpp')
-
-env.Program('main', ['gd.cpp', 'main.cpp'])
+env.Program('generator', ['gd.cpp', 'algebra.cpp', 'generator.cpp'])
 
