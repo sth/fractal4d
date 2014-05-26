@@ -13,8 +13,15 @@ class image {
 	gdImage *handle;
 
 public:
-	image(int xs, int sy);
+	image(int sx, int sy);
 	~image();
+
+	// Don't allow copy
+	image(const image&) = delete;
+	image& operator=(const image&) = delete;
+	// Allow move
+	image(image &&) = default;
+	image& operator=(image&&) = default;
 
 	void setPixel(int x, int y, int color);
 
