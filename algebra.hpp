@@ -2,8 +2,9 @@
 #if !defined(ALGEBRA_HPP_INCLUDED)
 #define ALGEBRA_HPP_INCLUDED
 
-// Some basic linear algebra functions for 4d vectors and planes
-// to help with calculations in the 4d set.
+/* Some basic linear algebra functions for 4d vectors and planes
+ * to help with calculations in the 4d set.
+ */
 
 // A 4d vector
 class vec4d {

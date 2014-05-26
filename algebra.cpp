@@ -2,7 +2,10 @@
 #include "algebra.hpp"
 #include <cmath>
 
-// See other member functions are implemented directly in the header
+/*
+ * The following functions are not really performance critical, in our case
+ * they only get called during initialization.
+ */
 
 double vec4d::dotproduct(const vec4d &other) const {
 	double prod = 0;
