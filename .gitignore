@@ -1,0 +1,4 @@
+*.o
+generator
+.scons*
+*.swp
