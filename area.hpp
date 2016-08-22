@@ -7,7 +7,7 @@
 // For image drawing purposes this defines an area of coordinates that
 // should be drawn.
 // It is specified by x. and y-coordinates of a point and the width of the area
-// in x direction. The width in y direction is chooses later according to the
+// in x direction. The width in y direction is choosen later according to the
 // image dimensions.
 struct coord_area {
 	plane4d plane;
