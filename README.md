@@ -31,6 +31,9 @@ changed or separated into a library.
 
 - libgd to write PNG pictures, but adjusting it to some other image API should be quite easy
 
+## License
+
+MIT Licence. See LICENSE.txt for details.
 
  [1]: http://en.wikipedia.org/wiki/Mandelbrot_set
  [2]: http://en.wikipedia.org/wiki/Julia_set#Quadratic_polynomials
