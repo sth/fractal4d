@@ -1,6 +1,9 @@
 
 #include "gd.hpp"
+#include <stdexcept>
 #include <cstdio>
+#include <cerrno>
+#include <cstring>
 
 namespace gd {
 
@@ -23,6 +26,9 @@ void image::writePng(const char *filename, int level) {
 	if (file) {
 		gdImagePngEx(handle, file, level);
 		std::fclose(file);
+	}
+	else {
+		throw std::runtime_error(std::strerror(errno));
 	}
 }
 
