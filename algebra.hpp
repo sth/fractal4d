@@ -18,7 +18,7 @@ public:
 	vec4d operator*(double fact) const;
 	vec4d operator/(double fact) const;
 
-	// The following functions are not really performance critical for out use
+	// The following functions are not really performance critical for out us
 	// since we only use them once in preparation of rendering an image.
 
 	// scalar product
@@ -79,34 +79,38 @@ inline vec4d::vec4d(double a, double b, double c, double d)
 
 inline vec4d vec4d::operator+(const vec4d &other) const {
 	return vec4d{
-			coords[0]+other.coords[0],
-			coords[1]+other.coords[1],
-			coords[2]+other.coords[2],
-			coords[3]+other.coords[3]};
+		coords[0]+other.coords[0],
+		coords[1]+other.coords[1],
+		coords[2]+other.coords[2],
+		coords[3]+other.coords[3]
+	};
 }
 
 inline vec4d vec4d::operator-(const vec4d &other) const {
 	return vec4d{
-			coords[0]-other.coords[0],
-			coords[1]-other.coords[1],
-			coords[2]-other.coords[2],
-			coords[3]-other.coords[3]};
+		coords[0]-other.coords[0],
+		coords[1]-other.coords[1],
+		coords[2]-other.coords[2],
+		coords[3]-other.coords[3]
+	};
 }
 
 inline vec4d vec4d::operator*(double fact) const {
 	return vec4d{
-			coords[0]*fact,
-			coords[1]*fact,
-			coords[2]*fact,
-			coords[3]*fact};
+		coords[0]*fact,
+		coords[1]*fact,
+		coords[2]*fact,
+		coords[3]*fact
+	};
 }
 
 inline vec4d vec4d::operator/(double fact) const {
 	return vec4d{
-			coords[0]/fact,
-			coords[1]/fact,
-			coords[2]/fact,
-			coords[3]/fact};
+		coords[0]/fact,
+		coords[1]/fact,
+		coords[2]/fact,
+		coords[3]/fact
+	};
 }
 
 
