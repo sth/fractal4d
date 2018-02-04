@@ -22,7 +22,7 @@ void image::setPixel(int x, int y, int color) {
 }
 
 void image::writePng(const char *filename, int level) {
-	FILE *file = std::fopen(filename, "w");
+	FILE *file = std::fopen(filename, "wb");
 	if (file) {
 		gdImagePngEx(handle, file, level);
 		std::fclose(file);
