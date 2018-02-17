@@ -14,7 +14,7 @@ public:
 
 private:
 	// One iteration step for the fractal generation.
-	// If you loke to generate a fractal for a different generation rule
+	// If you like to generate a fractal for a different generation rule
 	// like z^3 + c, change it here.
 	std::complex<double> iter_step(std::complex<double> z, std::complex<double> c) const {
 		return z*z + c;
