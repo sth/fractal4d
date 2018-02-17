@@ -59,7 +59,7 @@ int main() {
 	pixel_area pixels(coords, 800, 600);
 
 	// The fractal generator.
-	// Limit iterations to max 350
+	// Limit iterations to max 250
 	fractal_generator gen(250);
 
 	// Render a png image using this data
