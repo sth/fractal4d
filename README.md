@@ -26,7 +26,7 @@ dependencies on GUI libraries and such.
 
 The generator currently uses libgd to generate Png pictures, but could easily be adopted for other
 use. The drawing functions are separated from the fractal generation code and could easily be
-changed or separated into a library. The image is wrtten in `render_png()` in [main.cpp](main.cpp#L36),
+changed or separated into a library. The image is wrtten in [`render_png()`](main.cpp#L36),
 this is the function that would need to be changed.
 
 ## Dependencies
